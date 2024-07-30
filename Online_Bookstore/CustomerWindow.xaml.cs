@@ -34,6 +34,22 @@ namespace BookstoreApp
             BooksListBox.ItemsSource = filteredBooks;
         }
 
+        private void BookImage_Click(object sender, RoutedEventArgs e)
+        {
+            // Find the Image that was clicked
+            var image = sender as Image;
+            if (image != null)
+            {
+                var selectedBook = image.DataContext as Book;
+                if (selectedBook != null)
+                {
+                    // Open the book details in a new window
+                    var bookDetailsWindow = new BookDetails(selectedBook);
+                    bookDetailsWindow.Show();
+                }
+            }
+        }
+
         private void BooksListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (BooksListBox.SelectedItem is Book selectedBook)

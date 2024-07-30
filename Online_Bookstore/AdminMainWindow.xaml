@@ -5,26 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Online_Bookstore"
         mc:Ignorable="d"
-        Title="AdminMainWindow" Height="600" Width="900" Background="Orange" WindowState="Maximized">
+        Title="Admin Main Window" Height="600" Width="900" Background="Orange" WindowState="Maximized">
     <Grid>
+        <!-- Buttons -->
+        <Button Content="Search" FontSize="20" Click="SearchButton_Click" HorizontalAlignment="Left" Margin="657,76,0,0" VerticalAlignment="Top" Height="30" Width="101"/>
+        <Button Content="Add" FontSize="20" Click="AddButton_Click" HorizontalAlignment="Left" Margin="657,116,0,0" VerticalAlignment="Top" Height="30" Width="101"/>
+        <Button Content="Log out" FontSize="20" Click="LogoutButton_Click" HorizontalAlignment="Left" Margin="657,156,0,0" VerticalAlignment="Top" Height="30" Width="101"/>
 
-        <!-- Book Title Input -->
-        <Button Content="Search" FontSize="20" Click="SearchButton_Click" HorizontalAlignment="Left" Margin="657,76,0,0" VerticalAlignment="Top" Height="30" Width="101" RenderTransformOrigin="0.066,0.183"/>
-        <Button Content="Add" FontSize="20" Click="AddButton_Click" HorizontalAlignment="Left" Margin="657,156,0,0" VerticalAlignment="Top" Height="30" Width="101" RenderTransformOrigin="0.066,0.183"/>
-        <Button Content="Log out" FontSize="20" Click="LogoutButton_Click" HorizontalAlignment="Left" Margin="657,235,0,0" VerticalAlignment="Top" Height="30" Width="101" RenderTransformOrigin="0.066,0.183"/>
-        <Grid HorizontalAlignment="Left" Margin="100,76,0,0" VerticalAlignment="Top" Width="150" Height="189">
-
-            <TextBox x:Name="SearchTextBox" VerticalAlignment="Top" Margin="187,10,-346,0" Height="30"/>
+        <!-- Book Search and List -->
+        <Grid HorizontalAlignment="Left" Margin="100,76,0,0" VerticalAlignment="Top" Width="550" Height="480">
+            <TextBox x:Name="SearchTextBox" VerticalAlignment="Top" Margin="0,0,0,10" Height="30"/>
 
             <!-- Book List -->
             <ListBox x:Name="BooksListBox" 
-                 HorizontalAlignment="Left" 
-                 Margin="170,105,0,0" 
-                 VerticalAlignment="Top" 
-                 Width="410" 
-                 Height="330" 
-                 SelectionChanged="BooksListBox_SelectionChanged"
-                 ItemsSource="{Binding}" RenderTransformOrigin="0.792,0.614">
+                     HorizontalAlignment="Left" 
+                     Margin="0,40,0,0" 
+                     VerticalAlignment="Top" 
+                     Width="550" 
+                     Height="440" 
+                     SelectionChanged="BooksListBox_SelectionChanged"
+                     ItemsSource="{Binding}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="5">
@@ -33,18 +33,18 @@
                                 <Image Width="150" Height="150" Source="{Binding Picture}" Stretch="Fill"/>
                                 <TextBlock Text="{Binding Title}" FontWeight="Bold" Margin="0,5,0,0"/>
                                 <TextBlock Text="{Binding Price, StringFormat={}{0:C}}" Foreground="Gray"/>
+                                <Button Content="Remove" FontSize="10" Click="RemoveButton_Click" HorizontalAlignment="Right" Height="15" Width="50"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <TextBlock x:Name="BookDetailsTextBlock" HorizontalAlignment="Left" Margin="10,160,150,0" VerticalAlignment="Top" Width="160" Height="80" TextWrapping="Wrap"/>
+            <!-- Book Details -->
+            <TextBlock x:Name="BookDetailsTextBlock" HorizontalAlignment="Left" Margin="0,390,0,0" VerticalAlignment="Top" Width="500" Height="80" TextWrapping="Wrap"/>
 
             <!-- Book Picture -->
-            <Image x:Name="BookPictureImage" HorizontalAlignment="Right" Margin="0,100,-192,0" VerticalAlignment="Top" Width="150" Height="150"/>
-
+            <Image x:Name="BookPictureImage" HorizontalAlignment="Right" Margin="0,40,10,0" VerticalAlignment="Top" Width="150" Height="150"/>
         </Grid>
     </Grid>
-
 </Window>

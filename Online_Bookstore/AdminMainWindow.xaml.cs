@@ -80,5 +80,14 @@ namespace Online_Bookstore
             mainWindow.Show();
         }
 
-    }
+        private void RemoveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (BooksListBox.SelectedItem is Book selectedBook)
+            {
+                AdminWindow.Books.Remove(selectedBook);
+                MessageBox.Show("This book is deleted!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                SearchButton_Click(sender, e);
+            }
+        }
+        }
 }
