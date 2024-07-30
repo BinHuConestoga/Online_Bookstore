@@ -1,0 +1,68 @@
+﻿<Window x:Class="BookstoreApp.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AdminWindow" Height="600" Width="800" Background="Orange" WindowState="Maximized">
+    <Grid>
+        <!-- Book Title Input -->
+        <Label Content="Book Title:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Grid HorizontalAlignment="Left" Margin="100,10,0,0" VerticalAlignment="Top" Width="200">
+            <TextBox x:Name="BookTitleTextBox" VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"
+                       Foreground="Gray" IsHitTestVisible="False"
+                       Visibility="{Binding ElementName=BookTitleTextBox, Path=IsKeyboardFocusWithin, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        </Grid>
+
+        <!-- Book Author Input -->
+        <Label Content="Author:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
+        <Grid HorizontalAlignment="Left" Margin="100,50,0,0" VerticalAlignment="Top" Width="200">
+            <TextBox x:Name="BookDescriptionTextBox" VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"
+                       Foreground="Gray" IsHitTestVisible="False"
+                       Visibility="{Binding ElementName=BookAuthorTextBox, Path=IsKeyboardFocusWithin, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        </Grid>
+
+        <!-- Book Description Input -->
+        <Label Content="Description:" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
+        <Grid HorizontalAlignment="Left" Margin="100,90,0,0" VerticalAlignment="Top" Width="200">
+            <TextBox x:Name="BookAuthorTextBox" VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"
+                       Foreground="Gray" IsHitTestVisible="False"
+                       Visibility="{Binding ElementName=BookAuthorTextBox, Path=IsKeyboardFocusWithin, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        </Grid>
+
+        <!-- Book Price Input -->
+        <Label Content="Price:" HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top"/>
+        <Grid HorizontalAlignment="Left" Margin="100,130,0,0" VerticalAlignment="Top" Width="200">
+            <TextBox x:Name="BookPriceTextBox" VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"
+                       Foreground="Gray" IsHitTestVisible="False"
+                       Visibility="{Binding ElementName=BookPriceTextBox, Path=IsKeyboardFocusWithin, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        </Grid>
+
+        <!-- Book Category Input -->
+        <Label Content="Category:" HorizontalAlignment="Left" Margin="10,170,0,0" VerticalAlignment="Top"/>
+        <Grid HorizontalAlignment="Left" Margin="100,170,0,0" VerticalAlignment="Top" Width="200">
+            <TextBox x:Name="BookCategoryTextBox" VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"
+                       Foreground="Gray" IsHitTestVisible="False"
+                       Visibility="{Binding ElementName=BookCategoryTextBox, Path=IsKeyboardFocusWithin, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        </Grid>
+
+        <!-- Book Availability Input -->
+        <Label Content="Availability:" HorizontalAlignment="Left" Margin="10,210,0,0" VerticalAlignment="Top"/>
+        <Grid HorizontalAlignment="Left" Margin="100,210,0,0" VerticalAlignment="Top" Width="200">
+            <TextBox x:Name="BookAvailabilityTextBox" VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"
+                       Foreground="Gray" IsHitTestVisible="False"
+                       Visibility="{Binding ElementName=BookAvailabilityTextBox, Path=IsKeyboardFocusWithin, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        </Grid>
+
+        <!-- Book Picture Upload -->
+        <Button x:Name="SelectPictureButton" Content="Select Picture" HorizontalAlignment="Left" Margin="10,250,0,0" VerticalAlignment="Top" Width="80" Click="SelectPictureButton_Click"/>
+        <Image x:Name="BookPictureImage" HorizontalAlignment="Left" Margin="140,320,0,0" VerticalAlignment="Top" Width="150" Height="150"/>
+
+        <!-- Save Button -->
+        <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="10,300,0,0" VerticalAlignment="Top" Width="80" Click="SaveButton_Click"/>
+        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="110,300,0,0" VerticalAlignment="Top" Width="80" Click="CancelButton_Click"/>
+    </Grid>
+</Window>
