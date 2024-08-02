@@ -1,0 +1,30 @@
+﻿@model IEnumerable<OnlineBookstore.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<div class="container">
+    <h1>Your Shopping Cart</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Book.Title</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Book.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a href="/Cart/Checkout" class="btn btn-primary">Proceed to Checkout</a>
+</div>

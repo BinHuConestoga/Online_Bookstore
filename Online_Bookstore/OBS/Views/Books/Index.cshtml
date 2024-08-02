@@ -1,0 +1,24 @@
+﻿@model IEnumerable<OnlineBookstore.Models.Book>
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+<div class="container">
+    <h1>Book List</h1>
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@book.Title</h5>
+                        <p class="card-text">@book.Description</p>
+                        <p class="card-text"><strong>Price:</strong> $@book.Price</p>
+                        <a href="/Books/Details/@book.Id" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
