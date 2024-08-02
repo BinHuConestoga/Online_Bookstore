@@ -1,4 +1,4 @@
-﻿<Window x:Class="BookstoreApp.AdminWindow"
+﻿<Window x:Class="BookstoreApp.EditBook"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="AdminWindow" Height="600" Width="800" Background="Orange" WindowState="Maximized">

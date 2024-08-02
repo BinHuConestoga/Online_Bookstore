@@ -42,12 +42,12 @@ namespace Online_Bookstore
         {
             if (BooksListBox.SelectedItem is Book selectedBook)
             {
-                BookDetailsTextBlock.Text = $"Title: {selectedBook.Title}\n" +
+/*                BookDetailsTextBlock.Text = $"Title: {selectedBook.Title}\n" +
                                             $"Author: {selectedBook.Author}\n" +
                                             $"Description: {selectedBook.Description}\n" +
                                             $"Price: {selectedBook.Price}\n" +
                                             $"Category: {selectedBook.Category}\n" +
-                                            $"Availability: {selectedBook.Availability}";
+                                            $"Availability: {selectedBook.Availability}";*/
 
                 // Convert byte array to image
                 if (selectedBook.Picture != null)
@@ -89,5 +89,18 @@ namespace Online_Bookstore
                 SearchButton_Click(sender, e);
             }
         }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (BooksListBox.SelectedItem is Book selectedBook)
+            {
+                var editBook = new EditBook(selectedBook);
+                editBook.Show();
+/*                EditBook.
+                AdminWindow.Books.Remove(selectedBook);
+                MessageBox.Show("This book is deleted!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                SearchButton_Click(sender, e);*/
+            }
         }
+    }
 }
