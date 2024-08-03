@@ -143,7 +143,6 @@ namespace BookstoreApp
         {
             var currentUser = UserManager.GetCurrentUser();
             var orderHistoryWindow = new OrderHistoryWindow(currentUser);
-            this.Close();
             orderHistoryWindow.Show();
         }
 
