@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 using Microsoft.Win32;
 using System.Windows.Media.Imaging;
+using System.Xml.Serialization;
 
 namespace BookstoreApp
 {
@@ -16,6 +14,45 @@ namespace BookstoreApp
         public AdminWindow()
         {
             InitializeComponent();
+
+            if (File.Exists("books.xml"))
+            {
+                LoadBooksFromXml("books.xml");
+            }
+        }
+
+        private void SaveBooksToXml(string filePath)
+        {
+            var serializer = new XmlSerializer(typeof(BookCollection));
+            using (var writer = new StreamWriter(filePath))
+            {
+                var bookCollection = new BookCollection { Books = Books };
+                serializer.Serialize(writer, bookCollection);
+            }
+        }
+
+        public void LoadBooksFromXml(string filePath)
+        {
+            var serializer = new XmlSerializer(typeof(BookCollection));
+            using (var reader = new StreamReader(filePath))
+            {
+                var bookCollection = (BookCollection)serializer.Deserialize(reader);
+                Books = bookCollection.Books;
+            }
+        }
+
+        private void QueryBooks()
+        {
+            // Assuming books are already loaded into Books list
+            var query = from book in Books
+                        where book.Price > 20m
+                        orderby book.Title
+                        select book;
+
+            foreach (var book in query)
+            {
+                Console.WriteLine($"{book.Title} by {book.Author}");
+            }
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -60,6 +97,8 @@ namespace BookstoreApp
             }
 
             SaveBook(title, author, description, price, category, pictureBytes, availability);
+
+            SaveBooksToXml("books.xml");
         }
 
         private void SaveBook(string title, string author, string description, decimal price, string category, byte[] picture, int availability)

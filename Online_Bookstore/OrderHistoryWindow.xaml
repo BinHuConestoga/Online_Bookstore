@@ -1,0 +1,40 @@
+﻿<Window x:Class="BookstoreApp.OrderHistoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Order History" Height="450" Width="800" Background="Orange">
+    <Grid>
+        <ListBox x:Name="OrdersListBox"
+                 HorizontalAlignment="Left" VerticalAlignment="Top"
+                 Margin="10" Width="760" Height="350" Background="Orange">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Expander Header="{Binding OrderId, StringFormat='Order #{0}'}"
+                              Margin="5">
+                        <StackPanel>
+                            <TextBlock Text="{Binding OrderDate, StringFormat='Date: {0:MMMM dd, yyyy}'}"
+                                       FontWeight="Bold" Margin="0,0,0,5"/>
+                            <ItemsControl ItemsSource="{Binding OrderItems}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                            <Image Width="50" Height="75" Source="{Binding PictureSource}" />
+                                            <StackPanel Margin="10">
+                                                <TextBlock Text="{Binding BookTitle}" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding Price, StringFormat=C}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="{Binding TotalPrice, StringFormat='Total Price: {0:C}'}"
+                                       HorizontalAlignment="Right"
+                                       Margin="0,10,0,0"
+                                       FontWeight="Bold"
+                                       FontSize="16"/>
+                        </StackPanel>
+                    </Expander>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

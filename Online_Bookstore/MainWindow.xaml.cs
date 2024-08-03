@@ -18,6 +18,7 @@ namespace BookstoreApp
             var user = AuthenticateUser(username, password);
             if (user != null)
             {
+                UserManager.SetCurrentUser(user);
                 // Open the appropriate window based on user role
                 Console.WriteLine("role"+user.UserRole);
                 if (user.UserRole.ToString().Equals("Admin"))

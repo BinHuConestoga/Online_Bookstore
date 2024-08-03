@@ -19,7 +19,6 @@ namespace BookstoreApp
             var dateOfBirth = DateOfBirthPicker.SelectedDate;
             var address = HomeAddressTextBox.Text;
 
-            // Parse the role from the ComboBox
             if (RoleComboBox.SelectedItem is ComboBoxItem selectedRoleItem)
             {
                 if (!Enum.TryParse(selectedRoleItem.Content.ToString(), out Role role))
@@ -62,19 +61,19 @@ namespace BookstoreApp
             var newUser = new User
             {
                 UserName = username,
-                Password = password, 
-                UserRole = role
+                Password = password,
+                UserRole = role,
+                Email = email,
+                DateOfBirth = dateOfBirth,
+                HomeAddress = address
             };
 
-            UserStore.SaveUser(newUser);
+            UserStore.SaveUser(newUser, password);
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        
         }
-
     }
-
 }

@@ -1,29 +1,31 @@
-﻿using System.IO;
+﻿using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Windows;
-using Microsoft.Win32;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-
+using System.Xml.Serialization;
 
 namespace BookstoreApp
 {
     public partial class EditBook : Window
     {
-        // Assuming a static list for storing books
-        public static List<Book> Books = new List<Book>();
-
         private Book _originalBook;
+
         public EditBook(Book originalBook)
         {
             InitializeComponent();
             _originalBook = originalBook;
 
             // Set the details of the book
-            BookTitleTextBox.Text = $"{originalBook.Title}";
-            BookAuthorTextBox.Text = $"{originalBook.Author}";
-            BookPriceTextBox.Text = $"{originalBook.Price}";
-            BookCategoryTextBox.Text = $"{originalBook.Category}";
-            BookAvailabilityTextBox.Text = $"{originalBook.Availability}";
-            BookDescriptionTextBox.Text = $"{originalBook.Description}";
+            BookTitleTextBox.Text = originalBook.Title;
+            BookAuthorTextBox.Text = originalBook.Author;
+            BookPriceTextBox.Text = originalBook.Price.ToString();
+            BookCategoryTextBox.Text = originalBook.Category;
+            BookAvailabilityTextBox.Text = originalBook.Availability.ToString();
+            BookDescriptionTextBox.Text = originalBook.Description;
 
             if (originalBook.Picture != null && originalBook.Picture.Length > 0)
             {
@@ -31,13 +33,12 @@ namespace BookstoreApp
                 {
                     using (var memoryStream = new MemoryStream(originalBook.Picture))
                     {
-                        // Reset the position of the memory stream to the beginning
                         memoryStream.Position = 0;
 
                         var bitmapImage = new BitmapImage();
                         bitmapImage.BeginInit();
                         bitmapImage.StreamSource = memoryStream;
-                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Ensure the image is fully loaded
+                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                         bitmapImage.EndInit();
 
                         BookPictureImage.Source = bitmapImage;
@@ -45,7 +46,6 @@ namespace BookstoreApp
                 }
                 catch (Exception ex)
                 {
-                    // Log or handle the exception
                     MessageBox.Show($"Error loading image: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -53,9 +53,7 @@ namespace BookstoreApp
             {
                 BookPictureImage.Source = null;
             }
-            originalBook.Title = BookTitleTextBox.Text;
         }
-        
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
@@ -64,12 +62,19 @@ namespace BookstoreApp
             var description = BookDescriptionTextBox.Text;
             var priceText = BookPriceTextBox.Text;
             var category = BookCategoryTextBox.Text;
+            var availabilityText = BookAvailabilityTextBox.Text;
 
             // Convert price to decimal
-            decimal price;
-            if (!decimal.TryParse(priceText, out price))
+            if (!decimal.TryParse(priceText, out decimal price))
             {
                 MessageBox.Show("Please enter a valid number for Price.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Convert availability to integer
+            if (!int.TryParse(availabilityText, out int availability))
+            {
+                MessageBox.Show("Please enter a valid number for Availability.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -82,21 +87,14 @@ namespace BookstoreApp
             {
                 using (var memoryStream = new MemoryStream())
                 {
-                    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                    var encoder = new JpegBitmapEncoder();
                     encoder.Frames.Add(BitmapFrame.Create(picture));
                     encoder.Save(memoryStream);
                     pictureBytes = memoryStream.ToArray();
                 }
             }
 
-            var availabilityText = BookAvailabilityTextBox.Text;
-
-            int availability;
-            if (!int.TryParse(availabilityText, out availability))
-            {
-                MessageBox.Show("Please enter a valid number for Availability.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            // Update the original book's details
             _originalBook.Title = title;
             _originalBook.Author = author;
             _originalBook.Description = description;
@@ -105,7 +103,71 @@ namespace BookstoreApp
             _originalBook.Availability = availability;
             _originalBook.Picture = pictureBytes;
 
+            // Save the updated book list
+            SaveBookList();
+
             MessageBox.Show("Updated Successfully!");
+            this.Close();
+        }
+
+        private void SaveBookList()
+        {
+            try
+            {
+                // Load existing books from XML
+                var bookCollection = LoadBookCollection();
+
+                // Replace the updated book in the list
+                var bookToUpdate = bookCollection.Books.FirstOrDefault(b => b.Title == _originalBook.Title);
+                if (bookToUpdate != null)
+                {
+                    // Update the book details
+                    bookToUpdate.Title = _originalBook.Title;
+                    bookToUpdate.Author = _originalBook.Author;
+                    bookToUpdate.Description = _originalBook.Description;
+                    bookToUpdate.Price = _originalBook.Price;
+                    bookToUpdate.Category = _originalBook.Category;
+                    bookToUpdate.Availability = _originalBook.Availability;
+                    bookToUpdate.Picture = _originalBook.Picture;
+                }
+                else
+                {
+                    // If the book does not exist, add it to the collection
+                    bookCollection.Books.Add(_originalBook);
+                }
+
+                // Save the updated list back to XML
+                var serializer = new XmlSerializer(typeof(BookCollection));
+                using (var writer = new StreamWriter("books.xml"))
+                {
+                    serializer.Serialize(writer, bookCollection);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving book list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private BookCollection LoadBookCollection()
+        {
+            try
+            {
+                if (File.Exists("books.xml"))
+                {
+                    var serializer = new XmlSerializer(typeof(BookCollection));
+                    using (var reader = new StreamReader("books.xml"))
+                    {
+                        return (BookCollection)serializer.Deserialize(reader);
+                    }
+                }
+                return new BookCollection { Books = new List<Book>() };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading book list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return new BookCollection { Books = new List<Book>() };
+            }
         }
 
         private void SelectPictureButton_Click(object sender, RoutedEventArgs e)
@@ -126,16 +188,6 @@ namespace BookstoreApp
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-        private void ClearForm()
-        {
-            BookTitleTextBox.Clear();
-            BookAuthorTextBox.Clear();
-            BookDescriptionTextBox.Clear();
-            BookPriceTextBox.Clear();
-            BookCategoryTextBox.Clear();
-            BookPictureImage.Source = null;
-            BookAvailabilityTextBox.Clear();
         }
     }
 }

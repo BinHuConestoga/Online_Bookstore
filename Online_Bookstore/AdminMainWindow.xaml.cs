@@ -13,6 +13,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static System.Reflection.Metadata.BlobBuilder;
+using System.Xml.Serialization;
 
 namespace Online_Bookstore
 {
@@ -24,7 +26,39 @@ namespace Online_Bookstore
         public AdminMainWindow()
         {
             InitializeComponent();
+
+            LoadBooks();
         }
+
+        private void LoadBooks()
+        {
+            try
+            {
+                if (File.Exists("books.xml"))
+                {
+                    var serializer = new XmlSerializer(typeof(BookCollection));
+                    using (var reader = new StreamReader("books.xml"))
+                    {
+                        var bookCollection = (BookCollection)serializer.Deserialize(reader);
+                        AdminWindow.Books = bookCollection.Books;
+                    }
+                }
+                else
+                {
+                    AdminWindow.Books = new List<Book>();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading books: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                AdminWindow.Books = new List<Book>();
+            }
+
+            var filteredBooks = AdminWindow.Books.Take(9).ToList();
+
+            BooksListBox.ItemsSource = filteredBooks;
+        }
+
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
@@ -84,9 +118,54 @@ namespace Online_Bookstore
         {
             if (BooksListBox.SelectedItem is Book selectedBook)
             {
-                AdminWindow.Books.Remove(selectedBook);
-                MessageBox.Show("This book is deleted!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                SearchButton_Click(sender, e);
+                // Confirm removal
+                var result = MessageBox.Show("Are you sure you want to remove this book?", "Confirm Removal", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Remove the book from the in-memory collection
+                    var bookToRemove = AdminWindow.Books.FirstOrDefault(b => b.Title == selectedBook.Title);
+                    if (bookToRemove != null)
+                    {
+                        AdminWindow.Books.Remove(bookToRemove);
+
+                        // Save the updated collection to the XML file
+                        SaveBookList();
+
+                        MessageBox.Show("The book has been removed successfully.", "Book Removed", MessageBoxButton.OK, MessageBoxImage.Information);
+                        SearchButton_Click(sender, e); // Refresh the search results
+                    }
+                    else
+                    {
+                        MessageBox.Show("The selected book could not be found in the collection.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a book to remove.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void SaveBookList()
+        {
+            try
+            {
+                // Create a new book collection and populate it with the current list
+                var bookCollection = new BookCollection
+                {
+                    Books = AdminWindow.Books
+                };
+
+                // Save the updated list back to XML
+                var serializer = new XmlSerializer(typeof(BookCollection));
+                using (var writer = new StreamWriter("books.xml"))
+                {
+                    serializer.Serialize(writer, bookCollection);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving book list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
