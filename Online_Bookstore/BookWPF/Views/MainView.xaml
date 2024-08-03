@@ -1,0 +1,22 @@
+﻿<Window x:Class="OnlineBookstore.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:OnlineBookstore.ViewModels"
+        Title="Online Bookstore" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+    <Grid Background="#ECF0F1">
+        <ListView ItemsSource="{Binding Books}" Margin="10">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="200" />
+                    <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Author}" Width="150" />
+                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price, StringFormat=C}" Width="100" />
+                    <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Category}" Width="150" />
+                    <GridViewColumn Header="Availability" DisplayMemberBinding="{Binding IsAvailable}" Width="100" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
